@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "projects": {
+    "zephyr-api": "apps/zephyr-api"
+  }
+}

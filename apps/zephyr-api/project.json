@@ -1,0 +1,52 @@
+{
+  "root": "apps/zephyr-api",
+  "sourceRoot": "apps/zephyr-api/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/zephyr-api",
+        "main": "apps/zephyr-api/src/main.ts",
+        "tsConfig": "apps/zephyr-api/tsconfig.app.json",
+        "assets": ["apps/zephyr-api/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/zephyr-api/src/environments/environment.ts",
+              "with": "apps/zephyr-api/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/node:execute",
+      "options": {
+        "buildTarget": "zephyr-api:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/zephyr-api/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/zephyr-api"],
+      "options": {
+        "jestConfig": "apps/zephyr-api/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
