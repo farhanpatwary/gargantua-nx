@@ -1,6 +1,6 @@
 {
   "root": "libs/models",
-  "sourceRoot": "libs/models/src",
+  "sourceRoot": "libs/models/",
   "targets": {
     "build": {
       "executor": "@nrwl/js:tsc",
@@ -9,7 +9,7 @@
       ],
       "options": {
         "outputPath": "dist/libs/models",
-        "main": "libs/models/src/index.ts",
+        "main": "libs/models/index.ts",
         "tsConfig": "libs/models/tsconfig.lib.json",
         "assets": [
           "libs/models/*.md"
