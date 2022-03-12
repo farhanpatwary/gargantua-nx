@@ -44,7 +44,31 @@
         "command": "prisma migrate dev",
         "cwd": "libs/models"
       }
-    }
-  },
-  "tags": []
+    },
+    "migrate-save": {
+      "builder": "@nrwl/workspace:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "npx prisma migrate save --experimental --schema ./prisma/schema.prisma",
+        "cwd": "libs/models"
+      }
+    },
+    "migrate-up": {
+      "builder": "@nrwl/workspace:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "npx prisma migrate up --experimental --schema ./prisma/schema.prisma",
+        "cwd": "libs/models"
+      }
+    },
+    "gen-client": {
+      "builder": "@nrwl/workspace:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "npx prisma generate --schema ./prisma/schema.prisma",
+        "cwd": "libs/models"
+      }
+    },
+    "tags": {}
+  }
 }
