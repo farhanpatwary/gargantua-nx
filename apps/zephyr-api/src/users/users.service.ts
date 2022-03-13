@@ -4,18 +4,34 @@ import { prisma } from '../prisma/client';
 
 @Injectable()
 export class UsersService {
-  async getAllUsers() {
-    const users = await prisma.user.findMany();
+  getAllUsers() {
+    const users = prisma.user.findMany();
     return users;
   }
 
-  async getUserById(id: string) {
-    const user = await prisma.user.findFirst({ where: { id } });
+  getUserById(id: string) {
+    const user = prisma.user.findFirst({ where: { id } });
     return user;
   }
 
-  async createUser(userData: Prisma.UserCreateInput) {
-    const user = await prisma.user.create({ data: userData });
+  createUser(userData: Prisma.UserCreateInput) {
+    const user = prisma.user.create({ data: userData });
     return user;
+  }
+
+  deleteUserById(id: string) {
+    const deleted = prisma.user.delete({
+      where: { id },
+      select: { emailAddress: true, username: true },
+    });
+    return deleted;
+  }
+
+  deleteUserByUsername(username: string) {
+    const deleted = prisma.user.delete({
+      where: { username },
+      select: { emailAddress: true, username: true },
+    });
+    return deleted;
   }
 }

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Version } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Version,
+} from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -13,12 +23,14 @@ export class UsersController {
 
   @Post('all')
   @Version('1')
-  async createUser() {
-    const data = {
-      username: 'testuser',
-      emailAddress: 'real.email@email.com',
-      password: 'fakepassword',
-    };
-    return await this._userService.createUser(data);
+  async createUser(@Body() body: Prisma.UserCreateInput) {
+    return await this._userService.createUser(body);
+  }
+
+  @Delete(':username')
+  @Version('1')
+  async deleteUserByUsername(@Param('username') username: string) {
+    const deleted = await this._userService.deleteUserByUsername(username);
+    return deleted;
   }
 }
