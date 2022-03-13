@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { prisma } from '../prisma/client';
 import { AuthService } from '../auth/auth.service';
@@ -10,8 +10,8 @@ export class UsersService {
     return users;
   }
 
-  getUserById(id: string) {
-    const user = prisma.user.findFirst({ where: { id } });
+  getUserByUsername(username: string) {
+    const user = prisma.user.findFirst({ where: { username } });
     return user;
   }
 
@@ -31,7 +31,7 @@ export class UsersService {
       data: userData,
       select: { username: true, emailAddress: true },
     });
-    return user;
+    return { user, token };
   }
 
   deleteUserByUsername(username: string) {
@@ -43,7 +43,10 @@ export class UsersService {
   }
 
   async validateUser(username: string, pass: string): Promise<Partial<User>> {
-    const user = await this.getUserById(username);
+    const user = await this.getUserByUsername(username);
+    if (!user) {
+      throw new NotFoundException();
+    }
     // Verify password with hash
     const isValid = await this._authService.verifyHashedPassword(
       pass,

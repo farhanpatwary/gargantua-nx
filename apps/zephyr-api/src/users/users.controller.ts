@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Logger,
-  Param,
-  Post,
-  Version,
-} from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Controller, Delete, Get, Param, Version } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -19,12 +9,6 @@ export class UsersController {
   @Version('1')
   async getAllUsers() {
     return await this._userService.getAllUsers();
-  }
-
-  @Post('all')
-  @Version('1')
-  async createUser(@Body() body: Prisma.UserCreateInput) {
-    return await this._userService.createUser(body);
   }
 
   @Delete(':username')
