@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../prisma/client';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   getAllUsers() {
@@ -14,17 +14,14 @@ export class UsersService {
     return user;
   }
 
-  createUser(userData: Prisma.UserCreateInput) {
-    const user = prisma.user.create({ data: userData });
-    return user;
-  }
-
-  deleteUserById(id: string) {
-    const deleted = prisma.user.delete({
-      where: { id },
-      select: { emailAddress: true, username: true },
+  async createUser(userData: Prisma.UserCreateInput) {
+    const hash = await bcrypt.hash(userData.password, 10);
+    userData.password = hash;
+    const user = prisma.user.create({
+      data: userData,
+      select: { username: true, emailAddress: true },
     });
-    return deleted;
+    return user;
   }
 
   deleteUserByUsername(username: string) {
