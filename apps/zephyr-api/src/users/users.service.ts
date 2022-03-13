@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Prisma, User } from '@prisma/client';
 import { prisma } from '../prisma/client';
-import * as bcrypt from 'bcrypt';
+import { AuthService } from '../auth/auth.service';
 @Injectable()
 export class UsersService {
+  constructor(
+    @Inject(forwardRef(() => AuthService)) private _authService: AuthService
+  ) {}
   getAllUsers() {
     const users = prisma.user.findMany();
     return users;
@@ -15,8 +18,17 @@ export class UsersService {
   }
 
   async createUser(userData: Prisma.UserCreateInput) {
-    const hash = await bcrypt.hash(userData.password, 10);
+    // Hash user password with 10 rounds of hashing
+    const hash = await this._authService.generateHashedPassword(
+      userData.password
+    );
     userData.password = hash;
+
+    const token = this._authService.generateToken({
+      username: userData.username,
+    });
+    userData.tokens = [token] as Prisma.JsonArray;
+
     const user = prisma.user.create({
       data: userData,
       select: { username: true, emailAddress: true },
@@ -30,5 +42,19 @@ export class UsersService {
       select: { emailAddress: true, username: true },
     });
     return deleted;
+  }
+
+  async validateUser(username: string, pass: string): Promise<Partial<User>> {
+    const user = await this.getUserById(username);
+    // Verify password with hash
+    const isValid = await this._authService.verifyHashedPassword(
+      pass,
+      user.password
+    );
+    if (isValid) {
+      const { emailAddress, username } = user;
+      return { emailAddress, username };
+    }
+    return null;
   }
 }
