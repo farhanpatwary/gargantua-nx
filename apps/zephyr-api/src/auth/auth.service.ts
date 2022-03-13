@@ -1,12 +1,8 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
-import { UsersService } from '../users/users.service';
 @Injectable()
 export class AuthService {
-  constructor(
-    @Inject(forwardRef(() => UsersService)) private _usersService: UsersService
-  ) {}
   JWT_SIGNING_SECRET: 'PmzN!Q6CSg3ctkKs';
   SALT_ROUNDS = 10;
 

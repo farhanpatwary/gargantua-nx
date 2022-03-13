@@ -1,12 +1,10 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { prisma } from '../prisma/client';
 import { AuthService } from '../auth/auth.service';
 @Injectable()
 export class UsersService {
-  constructor(
-    @Inject(forwardRef(() => AuthService)) private _authService: AuthService
-  ) {}
+  constructor(private _authService: AuthService) {}
   getAllUsers() {
     const users = prisma.user.findMany();
     return users;
