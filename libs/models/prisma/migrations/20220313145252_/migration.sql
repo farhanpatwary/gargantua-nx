@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "tokens" JSONB,
+ALTER COLUMN "id" SET DATA TYPE TEXT,
+ADD CONSTRAINT "User_pkey" PRIMARY KEY ("id");
